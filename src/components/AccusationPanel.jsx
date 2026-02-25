@@ -8,6 +8,8 @@ import { trueTimeline } from '../data/timeline';
 export default function AccusationPanel() {
     const [selectedSuspect, setSelectedSuspect] = useState('');
     const [explanation, setExplanation] = useState('');
+    const [giveUp, setGiveUp] = useState(false);
+    const [confirmGiveUp, setConfirmGiveUp] = useState(false);
     const [showResult, setShowResult] = useState(false);
     const [lastResult, setLastResult] = useState(null);
 
@@ -31,13 +33,12 @@ export default function AccusationPanel() {
         return <SolvedScreen />;
     }
 
-    // All attempts exhausted — show reveal
-    if (accusationAttempts >= maxAttempts) {
-        return <FailedRevealScreen />;
-    }
-
     // Connection count for live feedback (works for any suspect — no answer leak)
     const connectionCount = getConnectionCount(explanation);
+
+    if (giveUp || accusationAttempts >= maxAttempts) {
+        return <FailedRevealScreen />;
+    }
 
     return (
         <div className="space-y-6">
@@ -142,6 +143,36 @@ export default function AccusationPanel() {
                         >
                             Submit Accusation ({maxAttempts - accusationAttempts} remaining)
                         </button>
+                    </div>
+
+                    {/* Give Up / Reveal Solution */}
+                    <div className="pt-8 mt-8 border-t border-noir-700/30 flex flex-col items-center">
+                        {!confirmGiveUp ? (
+                            <button
+                                onClick={() => setConfirmGiveUp(true)}
+                                className="text-[10px] text-noir-500 hover:text-noir-300 transition-colors uppercase tracking-widest"
+                            >
+                                Stuck? Give Up & Reveal Solution
+                            </button>
+                        ) : (
+                            <div className="flex flex-col items-center gap-3">
+                                <p className="text-xs text-amber-400">Are you sure? This will reveal the full solution.</p>
+                                <div className="flex gap-4">
+                                    <button
+                                        onClick={() => setGiveUp(true)}
+                                        className="btn-primary py-1 px-4 text-[10px]"
+                                    >
+                                        Yes, Reveal Solution
+                                    </button>
+                                    <button
+                                        onClick={() => setConfirmGiveUp(false)}
+                                        className="btn-secondary py-1 px-4 text-[10px]"
+                                    >
+                                        No, Keep Trying
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
