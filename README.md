@@ -40,6 +40,30 @@
 
 ---
 
+## 🛠️ How to Solve
+
+### 1. Gather Evidence (Board Tab)
+Start by examining the crime scene. Each clue you read will unlock new pieces of evidence. You need at least **8 key findings** before the authorities will accept an official accusation.
+
+### 2. Interrogate Suspects (Suspects Tab)
+Every guest has secrets. Question them about the timeline, their relationship with Victor, and the blackout. Look for contradictions — one person's alibi doesn't align with the forensic facts.
+
+### 3. Reconstruct the Timeline (Timeline Tab)
+The window between **9:17 PM (Blackout)** and **9:32 PM (Body Found)** is everything. Map every guest's location and cross-reference them with the physical evidence.
+
+### 4. Provide the Solution (Accuse Tab)
+Once you're certain, make your charge. You must:
+- Select the **one true killer**.
+- Write a theory (100+ chars) explaining the **Method, Motive, and Opportunity**.
+- Correctly identify at least **8 of 10 logical connections** (the system detects keywords in your theory).
+
+### 🆘 Getting Stuck?
+If you can't see the path forward:
+- **Use Hints (💡)**: Open the hint menu in the top bar. Progressive clues will guide you toward the next step.
+- **The Solution Dossier**: If you want to see the full answer, open the **Hint Menu (💡)** and click the red **"REVEAL FULL SOLUTION"** button at the bottom. This will explain the killer, method, motive, and all 10 logic points minute-by-minute.
+
+---
+
 ## 🎮 Features
 
 <table>
