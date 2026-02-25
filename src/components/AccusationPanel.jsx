@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useGameStore from '../store/gameStore';
 import { suspects } from '../data/suspects';
-import { validateAccusation, logicConnections } from '../logic/puzzleLogic';
+import { validateAccusation, getConnectionCount, getRevealData } from '../logic/puzzleLogic';
 import { trueTimeline } from '../data/timeline';
 
 export default function AccusationPanel() {
@@ -30,6 +30,14 @@ export default function AccusationPanel() {
     if (caseSolved) {
         return <SolvedScreen />;
     }
+
+    // All attempts exhausted — show reveal
+    if (accusationAttempts >= maxAttempts) {
+        return <FailedRevealScreen />;
+    }
+
+    // Connection count for live feedback (works for any suspect — no answer leak)
+    const connectionCount = getConnectionCount(explanation);
 
     return (
         <div className="space-y-6">
@@ -63,9 +71,7 @@ export default function AccusationPanel() {
             {!canMake() ? (
                 <div className="bg-amber-900/20 border border-amber-800/30 rounded-xl p-5 text-center">
                     <p className="text-amber-300 text-sm">
-                        {accusationAttempts >= maxAttempts
-                            ? 'You have exhausted all accusation attempts. The case remains unsolved.'
-                            : 'You need to discover more evidence before making an accusation. Keep investigating.'}
+                        You need to discover more evidence before making an accusation. Keep investigating.
                     </p>
                 </div>
             ) : (
@@ -118,14 +124,10 @@ export default function AccusationPanel() {
                                 {explanation.length} characters {explanation.length < 100 ? `(${100 - explanation.length} more needed)` : '✓'}
                             </span>
 
-                            {/* Logic connection preview */}
-                            {selectedSuspect === 'adrian' && explanation.length > 20 && (
+                            {/* Logic connection count — shown for ALL suspects, no answer leak */}
+                            {explanation.length > 20 && (
                                 <span className="text-[10px] text-noir-500">
-                                    Logic connections detected: {
-                                        logicConnections.filter(c =>
-                                            c.keywords.some(k => explanation.toLowerCase().includes(k.toLowerCase()))
-                                        ).length
-                                    }/10
+                                    Evidence points detected: {connectionCount}/10
                                 </span>
                             )}
                         </div>
@@ -144,7 +146,7 @@ export default function AccusationPanel() {
                 </div>
             )}
 
-            {/* Result Modal */}
+            {/* Failed attempt modal */}
             <AnimatePresence>
                 {showResult && lastResult && !lastResult.success && (
                     <motion.div
@@ -180,6 +182,139 @@ export default function AccusationPanel() {
                     </motion.div>
                 )}
             </AnimatePresence>
+        </div>
+    );
+}
+
+// Shown when all 3 attempts are exhausted — reveals the answer
+function FailedRevealScreen() {
+    const [showReveal, setShowReveal] = useState(false);
+    const resetGame = useGameStore(s => s.resetGame);
+
+    const revealData = getRevealData();
+
+    return (
+        <div className="space-y-8">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center space-y-4"
+            >
+                <div className="text-6xl">📁</div>
+                <h2 className="text-3xl font-serif font-bold text-red-300">Case Closed — Unsolved</h2>
+                <p className="text-sm text-noir-400 max-w-lg mx-auto leading-relaxed">
+                    You have exhausted all 3 accusation attempts. The investigation has been
+                    transferred to another detective. The case file has been sealed.
+                </p>
+            </motion.div>
+
+            {!showReveal ? (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="text-center space-y-4"
+                >
+                    <p className="text-xs text-noir-500">
+                        Would you like to see the real answer?
+                    </p>
+                    <div className="flex justify-center gap-4">
+                        <button
+                            onClick={() => setShowReveal(true)}
+                            className="btn-primary"
+                        >
+                            🔓 Reveal the Truth
+                        </button>
+                        <button onClick={resetGame} className="btn-secondary">
+                            Start Over
+                        </button>
+                    </div>
+                </motion.div>
+            ) : (
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="space-y-6"
+                >
+                    {/* The killer revealed */}
+                    <div className="bg-red-900/15 border border-red-800/30 rounded-2xl p-6 space-y-4">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 rounded-full bg-red-900/30 border border-red-800/40
+                                          flex items-center justify-center text-3xl">
+                                {suspects.find(s => s.id === revealData.killerId)?.portrait || '🔴'}
+                            </div>
+                            <div>
+                                <p className="text-xs text-red-400/60 uppercase tracking-wider">The Killer</p>
+                                <h3 className="text-2xl font-serif font-bold text-red-300">{revealData.killerName}</h3>
+                            </div>
+                        </div>
+                        <p className="text-sm text-noir-300 leading-relaxed">{revealData.summary}</p>
+                    </div>
+
+                    {/* Method */}
+                    <div className="bg-noir-800/50 border border-noir-700/40 rounded-2xl p-6">
+                        <h4 className="text-label mb-3">Method</h4>
+                        <p className="text-sm text-noir-300 leading-relaxed">{revealData.method}</p>
+                    </div>
+
+                    {/* Motive */}
+                    <div className="bg-noir-800/50 border border-noir-700/40 rounded-2xl p-6">
+                        <h4 className="text-label mb-3">Motive</h4>
+                        <p className="text-sm text-noir-300 leading-relaxed">{revealData.motive}</p>
+                    </div>
+
+                    {/* Key evidence points */}
+                    <div className="bg-noir-800/50 border border-noir-700/40 rounded-2xl p-6">
+                        <h4 className="text-label mb-3">10 Key Evidence Points</h4>
+                        <div className="space-y-2">
+                            {revealData.keyEvidence.map((point, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.1 * i }}
+                                    className="flex items-start gap-3 p-2 bg-noir-900/40 rounded-lg"
+                                >
+                                    <span className="text-xs font-mono text-evidence/60 mt-0.5">{i + 1}.</span>
+                                    <p className="text-xs text-noir-300">{point}</p>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* True timeline */}
+                    <div className="bg-noir-800/50 border border-evidence/20 rounded-2xl p-6">
+                        <h4 className="text-label mb-3">The True Timeline</h4>
+                        <div className="space-y-3">
+                            {trueTimeline.map((item, i) => (
+                                <motion.div
+                                    key={i}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.15 * i }}
+                                    className="flex gap-3 p-3 bg-noir-900/40 rounded-lg"
+                                >
+                                    <span className="text-xs font-mono text-evidence/70 whitespace-nowrap min-w-[70px]">
+                                        {item.time}
+                                    </span>
+                                    <p className="text-xs text-noir-300 leading-relaxed">{item.event}</p>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Try again */}
+                    <div className="text-center pt-4">
+                        <p className="text-xs text-noir-500 mb-4">
+                            Now that you know the truth, can you build a perfect case?
+                        </p>
+                        <button onClick={resetGame} className="btn-primary">
+                            🔄 Start New Investigation
+                        </button>
+                    </div>
+                </motion.div>
+            )}
         </div>
     );
 }
