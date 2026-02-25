@@ -100,6 +100,23 @@ export default function HintSystem() {
                                     </p>
                                 )}
                             </div>
+
+                            {/* Final Solution (Last Resort) */}
+                            <div className="p-3 bg-red-900/10 border-t border-red-900/20 text-center">
+                                <button
+                                    onClick={() => {
+                                        if (confirm("This will reveal the full solution and end the game. Are you sure?")) {
+                                            useGameStore.getState().attemptAccusation({ success: false });
+                                            // Force 3 attempts
+                                            useGameStore.setState({ accusationAttempts: 3 });
+                                            setIsOpen(false);
+                                        }
+                                    }}
+                                    className="text-[10px] text-red-400 hover:text-red-300 transition-colors font-semibold uppercase tracking-widest"
+                                >
+                                    Reveal Full Solution
+                                </button>
+                            </div>
                         </motion.div>
                     </>
                 )}
