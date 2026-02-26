@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useGameStore from '../store/gameStore';
-import { hints, getAvailableHints } from '../logic/puzzleLogic';
 
 export default function HintSystem() {
     const [isOpen, setIsOpen] = useState(false);
@@ -9,10 +8,25 @@ export default function HintSystem() {
     const usedHints = useGameStore(s => s.usedHints);
     const hintPenalty = useGameStore(s => s.hintPenalty);
     const useHint = useGameStore(s => s.useHint);
+    const episodeData = useGameStore(s => s.episodeData);
+    const setActiveTab = useGameStore(s => s.setActiveTab);
 
+    const hints = episodeData?.hints || [];
+    const getAvailableHints = episodeData?.getAvailableHints || (() => []);
     const availableHints = getAvailableHints(discoveredEvidence.length, usedHints);
-
     const usedHintData = hints.filter(h => usedHints.includes(h.id));
+
+    const handleRevealSolution = () => {
+        if (confirm("This will reveal the full solution and end the game. Are you sure?")) {
+            // Force all 3 attempts used, then show FailedRevealScreen via accusation tab
+            useGameStore.setState({
+                accusationAttempts: 3,
+                caseSolved: false,
+                activeTab: 'accusation',
+            });
+            setIsOpen(false);
+        }
+    };
 
     return (
         <div className="relative">
@@ -35,44 +49,47 @@ export default function HintSystem() {
             <AnimatePresence>
                 {isOpen && (
                     <>
+                        {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="fixed inset-0 z-20"
+                            className="fixed inset-0 z-40 bg-black/40"
                             onClick={() => setIsOpen(false)}
                         />
+                        {/* Panel — fixed center on mobile, absolute on desktop */}
                         <motion.div
-                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                            className="absolute right-0 top-full mt-2 w-80 bg-noir-900 border border-noir-700/50 
-                         rounded-xl shadow-2xl z-30 overflow-hidden"
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            className="fixed inset-x-4 top-20 sm:inset-auto sm:absolute sm:right-0 sm:top-full sm:mt-2 
+                                       w-auto sm:w-80 max-w-sm mx-auto sm:mx-0
+                                       bg-noir-900 border border-noir-700/50 
+                                       rounded-xl shadow-2xl z-50 overflow-hidden"
                         >
                             <div className="p-4 border-b border-noir-700/30">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-sm font-semibold text-noir-200">Investigation Hints</h3>
-                                    <span className="text-[10px] text-noir-500">Penalty: -{hintPenalty} pts</span>
+                                    <h3 className="text-sm font-semibold text-noir-200">💡 Investigation Hints</h3>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-[10px] text-noir-500">-{hintPenalty} pts</span>
+                                        <button onClick={() => setIsOpen(false)} className="text-noir-500 hover:text-noir-300 text-lg leading-none">×</button>
+                                    </div>
                                 </div>
                                 <p className="text-[10px] text-noir-500 mt-1">
-                                    Using hints reduces your final score. Use sparingly.
+                                    Using hints reduces your final score.
                                 </p>
                             </div>
 
                             <div className="p-3 max-h-64 overflow-y-auto space-y-2">
-                                {/* Show used hints first */}
-                                {usedHintData.length > 0 && (
-                                    <div className="space-y-2 mb-3">
-                                        {usedHintData.map(hint => (
-                                            <div key={hint.id} className="p-3 bg-noir-800/30 rounded-lg border border-noir-700/20">
-                                                <p className="text-xs text-noir-300">{hint.text}</p>
-                                                <span className="text-[10px] text-noir-600 mt-1 block">
-                                                    Used • {hint.cost > 0 ? `-${hint.cost} pts` : 'Free'}
-                                                </span>
-                                            </div>
-                                        ))}
+                                {/* Used hints */}
+                                {usedHintData.map(hint => (
+                                    <div key={hint.id} className="p-3 bg-noir-800/30 rounded-lg border border-noir-700/20">
+                                        <p className="text-xs text-noir-300">{hint.text}</p>
+                                        <span className="text-[10px] text-noir-600 mt-1 block">
+                                            ✓ Used • {hint.cost > 0 ? `-${hint.cost} pts` : 'Free'}
+                                        </span>
                                     </div>
-                                )}
+                                ))}
 
                                 {/* Available hints */}
                                 {availableHints.length > 0 ? (
@@ -95,26 +112,19 @@ export default function HintSystem() {
                                 ) : (
                                     <p className="text-xs text-noir-500 text-center py-3">
                                         {usedHintData.length > 0
-                                            ? 'No more hints available at this stage. Discover more evidence.'
+                                            ? 'No more hints available. Discover more evidence.'
                                             : 'No hints available yet. Start investigating.'}
                                     </p>
                                 )}
                             </div>
 
-                            {/* Final Solution (Last Resort) */}
+                            {/* Reveal Full Solution */}
                             <div className="p-3 bg-red-900/10 border-t border-red-900/20 text-center">
                                 <button
-                                    onClick={() => {
-                                        if (confirm("This will reveal the full solution and end the game. Are you sure?")) {
-                                            useGameStore.getState().attemptAccusation({ success: false });
-                                            // Force 3 attempts
-                                            useGameStore.setState({ accusationAttempts: 3 });
-                                            setIsOpen(false);
-                                        }
-                                    }}
+                                    onClick={handleRevealSolution}
                                     className="text-[10px] text-red-400 hover:text-red-300 transition-colors font-semibold uppercase tracking-widest"
                                 >
-                                    Reveal Full Solution
+                                    🔓 Reveal Full Solution
                                 </button>
                             </div>
                         </motion.div>

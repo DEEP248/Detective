@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Modal from './Modal';
 import useGameStore from '../store/gameStore';
-import { evidence } from '../data/evidence';
 
 export default function EvidenceViewer({ evidenceId, onClose }) {
     const markEvidenceRead = useGameStore(s => s.markEvidenceRead);
     const discoveredEvidence = useGameStore(s => s.discoveredEvidence);
+    const evidence = useGameStore(s => s.episodeData?.evidence) || [];
     const item = evidence.find(e => e.id === evidenceId);
 
     useEffect(() => {
@@ -23,6 +23,10 @@ export default function EvidenceViewer({ evidenceId, onClose }) {
         house: '🏠',
         timing: '⏱️',
         document: '📄',
+        testimony: '🗣️',
+        background: '📋',
+        method: '🔬',
+        misdirection: '🎭',
     };
 
     const categoryLabels = {
@@ -31,6 +35,10 @@ export default function EvidenceViewer({ evidenceId, onClose }) {
         house: 'House Systems',
         timing: 'Timeline Analysis',
         document: 'Document Evidence',
+        testimony: 'Witness Testimony',
+        background: 'Background Research',
+        method: 'Method Analysis',
+        misdirection: 'Suspect Lead',
     };
 
     // Find what this evidence unlocks

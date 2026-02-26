@@ -1,11 +1,14 @@
 import { motion } from 'framer-motion';
-import { relationships, victimProfile } from '../data/relationships';
-import { suspects } from '../data/suspects';
+import useGameStore from '../store/gameStore';
 import { staggerContainer, staggerItem } from '../animations/variants';
 
 export default function RelationshipMap() {
+    const episodeData = useGameStore(s => s.episodeData);
+    const relationships = episodeData?.relationships || [];
+    const victimProfile = episodeData?.victimProfile || { id: 'unknown', name: 'Unknown', portrait: '💀', role: 'Victim', color: '#c45555' };
+    const suspects = episodeData?.suspects || [];
     const allPeople = [
-        { ...victimProfile, id: 'victor' },
+        { ...victimProfile },
         ...suspects,
     ];
 

@@ -4,23 +4,19 @@ import useGameStore from '../store/gameStore';
 
 export default function IntroSection() {
     const startGame = useGameStore(s => s.startGame);
+    const episodeData = useGameStore(s => s.episodeData);
+    const goHome = useGameStore(s => s.goHome);
     const [phase, setPhase] = useState(0);
     const [showStart, setShowStart] = useState(false);
 
-    const lines = [
-        'October 14th. 9:17 PM.',
-        'The lights go out.',
-        'Thunder shakes the manor.',
-        'Fifteen minutes of darkness.',
-        'When the lights return...',
-        'Victor Hale is dead.',
-        'The library window — locked from inside.',
-        'No forced entry. No weapon found.',
-        'Six suspects. Six stories.',
-        'One truth.',
-    ];
+    const meta = episodeData?.meta;
+    const intro = episodeData?.intro;
+    const lines = intro?.lines || [];
+    const highlightLine = intro?.highlightLine ?? 5;
 
     useEffect(() => {
+        setPhase(0);
+        setShowStart(false);
         const timer = setInterval(() => {
             setPhase(prev => {
                 if (prev >= lines.length) {
@@ -32,7 +28,7 @@ export default function IntroSection() {
             });
         }, 1200);
         return () => clearInterval(timer);
-    }, []);
+    }, [lines.length]);
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
@@ -43,6 +39,16 @@ export default function IntroSection() {
                 <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-red-900/10 rounded-full blur-[100px]" />
             </div>
 
+            {/* Back button */}
+            <motion.button
+                onClick={goHome}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="absolute top-6 left-6 z-20 text-xs text-noir-500 hover:text-evidence transition-colors flex items-center gap-1"
+            >
+                ← Back to Cases
+            </motion.button>
+
             <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
                 {/* Title */}
                 <motion.div
@@ -51,13 +57,17 @@ export default function IntroSection() {
                     transition={{ duration: 1 }}
                     className="mb-16"
                 >
-                    <p className="text-xs uppercase tracking-[0.4em] text-noir-500 mb-4">Episode 1</p>
-                    <h1 className="text-5xl md:text-7xl font-serif font-bold text-noir-100 leading-tight">
-                        The Silence<br />
-                        <span className="text-evidence text-shadow-warm">Protocol</span>
+                    <p className="text-xs uppercase tracking-[0.4em] text-noir-500 mb-4">
+                        Episode {meta?.number}
+                    </p>
+                    <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold text-noir-100 leading-tight">
+                        {meta?.title?.split(' ').slice(0, -1).join(' ')}<br />
+                        <span className="text-evidence text-shadow-warm">
+                            {meta?.title?.split(' ').slice(-1)}
+                        </span>
                     </h1>
                     <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-evidence to-transparent mx-auto mt-6" />
-                    <p className="text-lg font-serif italic text-noir-400 mt-4">The Last Candle</p>
+                    <p className="text-base sm:text-lg font-serif italic text-noir-400 mt-4">{meta?.subtitle}</p>
                 </motion.div>
 
                 {/* Typewriter lines */}
@@ -69,11 +79,11 @@ export default function IntroSection() {
                             animate={phase > index ? { opacity: 1, y: 0 } : {}}
                             transition={{ duration: 0.5 }}
                             className={`text-sm md:text-base font-mono leading-relaxed
-                ${index === 5 ? 'text-red-400 font-semibold text-lg' : ''}
-                ${index === lines.length - 1 ? 'text-evidence font-semibold text-lg mt-6' : ''}
-                ${index < 5 ? 'text-noir-400' : ''}
-                ${index > 5 && index < lines.length - 1 ? 'text-noir-300' : ''}
-              `}
+                                ${index === highlightLine ? 'text-red-400 font-semibold text-lg' : ''}
+                                ${index === lines.length - 1 ? 'text-evidence font-semibold text-lg mt-6' : ''}
+                                ${index < highlightLine ? 'text-noir-400' : ''}
+                                ${index > highlightLine && index < lines.length - 1 ? 'text-noir-300' : ''}
+                            `}
                         >
                             {phase > index ? line : ''}
                         </motion.p>
@@ -90,11 +100,11 @@ export default function IntroSection() {
                         <button
                             onClick={startGame}
                             className="group relative px-10 py-4 bg-transparent border border-evidence/40 
-                       rounded-lg overflow-hidden transition-all duration-500
-                       hover:border-evidence hover:shadow-glow-warm"
+                                       rounded-lg overflow-hidden transition-all duration-500
+                                       hover:border-evidence hover:shadow-glow-warm"
                         >
                             <span className="absolute inset-0 bg-gradient-to-r from-evidence/0 via-evidence/5 to-evidence/0 
-                             group-hover:via-evidence/15 transition-all duration-500" />
+                                             group-hover:via-evidence/15 transition-all duration-500" />
                             <span className="relative text-sm uppercase tracking-[0.25em] text-evidence font-semibold">
                                 Begin Investigation
                             </span>
@@ -102,7 +112,6 @@ export default function IntroSection() {
                     </motion.div>
                 )}
 
-                {/* Continue saved game */}
                 {showStart && (
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -115,7 +124,7 @@ export default function IntroSection() {
                 )}
             </div>
 
-            {/* Candle glow at bottom */}
+            {/* Glow at bottom */}
             <motion.div
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-32"
                 animate={{ opacity: [0.4, 0.7, 0.4] }}

@@ -1,13 +1,9 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useGameStore from '../store/gameStore';
-import { suspects } from '../data/suspects';
-import { validateAccusation, getConnectionCount, getRevealData } from '../logic/puzzleLogic';
-import { trueTimeline } from '../data/timeline';
 
 export default function AccusationPanel() {
     const [selectedSuspect, setSelectedSuspect] = useState('');
-    const [explanation, setExplanation] = useState('');
     const [showResult, setShowResult] = useState(false);
     const [lastResult, setLastResult] = useState(null);
 
@@ -17,11 +13,14 @@ export default function AccusationPanel() {
     const attemptAccusation = useGameStore(s => s.attemptAccusation);
     const discoveredEvidence = useGameStore(s => s.discoveredEvidence);
     const canMake = useGameStore(s => s.canMakeAccusation);
+    const episodeData = useGameStore(s => s.episodeData);
+
+    const suspects = episodeData?.suspects || [];
+    const validateAccusation = episodeData?.validateAccusation;
 
     const handleSubmit = () => {
-        if (!selectedSuspect || explanation.length < 100) return;
-
-        const result = validateAccusation(selectedSuspect, explanation);
+        if (!selectedSuspect || !validateAccusation) return;
+        const result = validateAccusation(selectedSuspect);
         setLastResult(result);
         setShowResult(true);
         attemptAccusation(result);
@@ -30,9 +29,6 @@ export default function AccusationPanel() {
     if (caseSolved) {
         return <SolvedScreen />;
     }
-
-    // Connection count for live feedback (works for any suspect — no answer leak)
-    const connectionCount = getConnectionCount(explanation);
 
     if (accusationAttempts >= maxAttempts) {
         return <FailedRevealScreen />;
@@ -55,14 +51,9 @@ export default function AccusationPanel() {
                         <span>{discoveredEvidence.length >= 8 ? '✓' : '○'}</span>
                         Discover at least 8 pieces of evidence ({discoveredEvidence.length} found)
                     </li>
-                    <li className="flex items-center gap-2">
-                        <span>○</span> Select the correct suspect
-                    </li>
-                    <li className="flex items-center gap-2">
-                        <span>○</span> Provide explanation with at least 8 of 10 logical connections
-                    </li>
-                    <li className="flex items-center gap-2">
-                        <span>○</span> Explanation must be at least 100 characters
+                    <li className={`flex items-center gap-2 ${selectedSuspect ? 'text-emerald-400' : ''}`}>
+                        <span>{selectedSuspect ? '✓' : '○'}</span>
+                        Select the killer from the suspects below
                     </li>
                 </ul>
             </div>
@@ -77,20 +68,20 @@ export default function AccusationPanel() {
                 <div className="space-y-5">
                     {/* Suspect Selection */}
                     <div>
-                        <p className="text-label mb-3">Select Suspect</p>
+                        <p className="text-label mb-3">Who is the killer?</p>
                         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                             {suspects.map(suspect => (
                                 <button
                                     key={suspect.id}
                                     onClick={() => setSelectedSuspect(suspect.id)}
-                                    className={`p-3 rounded-xl border text-left transition-all duration-200
-                    ${selectedSuspect === suspect.id
+                                    className={`p-4 rounded-xl border text-left transition-all duration-200
+                                        ${selectedSuspect === suspect.id
                                             ? 'border-evidence bg-evidence/10 ring-1 ring-evidence/30'
                                             : 'border-noir-700/40 bg-noir-800/30 hover:border-noir-600'
                                         }`}
                                 >
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-xl">{suspect.portrait}</span>
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-2xl">{suspect.portrait}</span>
                                         <div>
                                             <p className="text-sm font-medium text-noir-100">{suspect.name}</p>
                                             <p className="text-[10px] text-noir-500">{suspect.role}</p>
@@ -101,48 +92,16 @@ export default function AccusationPanel() {
                         </div>
                     </div>
 
-                    {/* Explanation Textarea */}
-                    <div>
-                        <p className="text-label mb-2">Your Theory</p>
-                        <p className="text-[11px] text-noir-500 mb-3">
-                            Explain HOW and WHY this suspect committed the murder. Include evidence about the method,
-                            motive, timeline, and how they covered their tracks. Be specific — mention physical evidence,
-                            timing details, and the locked-room trick.
-                        </p>
-                        <textarea
-                            value={explanation}
-                            onChange={(e) => setExplanation(e.target.value)}
-                            placeholder="Based on the evidence I've gathered, I believe the killer..."
-                            className="w-full h-48 bg-noir-800/50 border border-noir-700/40 rounded-xl p-4
-                       text-sm text-noir-200 placeholder-noir-600 resize-none
-                       focus:outline-none focus:border-evidence/40 focus:ring-1 focus:ring-evidence/20
-                       transition-all duration-200"
-                        />
-                        <div className="flex justify-between mt-2">
-                            <span className={`text-[10px] ${explanation.length >= 100 ? 'text-emerald-500' : 'text-noir-500'}`}>
-                                {explanation.length} characters {explanation.length < 100 ? `(${100 - explanation.length} more needed)` : '✓'}
-                            </span>
-
-                            {/* Logic connection count — shown for ALL suspects, no answer leak */}
-                            {explanation.length > 20 && (
-                                <span className="text-[10px] text-noir-500">
-                                    Evidence points detected: {connectionCount}/10
-                                </span>
-                            )}
-                        </div>
-                    </div>
-
                     {/* Submit */}
                     <div className="flex justify-end gap-3">
                         <button
                             onClick={handleSubmit}
-                            disabled={!selectedSuspect || explanation.length < 100}
+                            disabled={!selectedSuspect}
                             className="btn-danger disabled:opacity-40 disabled:cursor-not-allowed"
                         >
-                            Submit Accusation ({maxAttempts - accusationAttempts} remaining)
+                            ⚖️ Submit Accusation ({maxAttempts - accusationAttempts} remaining)
                         </button>
                     </div>
-
                 </div>
             )}
 
@@ -164,15 +123,10 @@ export default function AccusationPanel() {
                         >
                             <div className="text-center space-y-4">
                                 <div className="text-5xl">❌</div>
-                                <h3 className="text-xl font-serif font-bold text-red-300">Case Not Proven</h3>
+                                <h3 className="text-xl font-serif font-bold text-red-300">Wrong Suspect</h3>
                                 <p className="text-sm text-noir-300 leading-relaxed">{lastResult.message}</p>
-                                {lastResult.score > 0 && (
-                                    <p className="text-xs text-noir-500">
-                                        Logic connections found: {lastResult.score}/10
-                                    </p>
-                                )}
                                 <button
-                                    onClick={() => setShowResult(false)}
+                                    onClick={() => { setShowResult(false); setSelectedSuspect(''); }}
                                     className="btn-secondary mt-4"
                                 >
                                     Return to Investigation
@@ -189,9 +143,16 @@ export default function AccusationPanel() {
 // Shown when all 3 attempts are exhausted — reveals the answer
 function FailedRevealScreen() {
     const [showReveal, setShowReveal] = useState(false);
+    const goHome = useGameStore(s => s.goHome);
     const resetGame = useGameStore(s => s.resetGame);
+    const episodeData = useGameStore(s => s.episodeData);
 
-    const revealData = getRevealData();
+    const getRevealData = episodeData?.getRevealData;
+    const suspects = episodeData?.suspects || [];
+    const trueTimeline = episodeData?.trueTimeline || [];
+    const revealData = getRevealData ? getRevealData() : null;
+
+    if (!revealData) return null;
 
     return (
         <div className="space-y-8">
@@ -215,18 +176,13 @@ function FailedRevealScreen() {
                     transition={{ delay: 0.5 }}
                     className="text-center space-y-4"
                 >
-                    <p className="text-xs text-noir-500">
-                        Would you like to see the real answer?
-                    </p>
+                    <p className="text-xs text-noir-500">Would you like to see the real answer?</p>
                     <div className="flex justify-center gap-4">
-                        <button
-                            onClick={() => setShowReveal(true)}
-                            className="btn-primary"
-                        >
+                        <button onClick={() => setShowReveal(true)} className="btn-primary">
                             🔓 Reveal the Truth
                         </button>
-                        <button onClick={resetGame} className="btn-secondary">
-                            Start Over
+                        <button onClick={goHome} className="btn-secondary">
+                            Back to Cases
                         </button>
                     </div>
                 </motion.div>
@@ -264,7 +220,7 @@ function FailedRevealScreen() {
                         <p className="text-sm text-noir-300 leading-relaxed">{revealData.motive}</p>
                     </div>
 
-                    {/* Key evidence points */}
+                    {/* Key evidence */}
                     <div className="bg-noir-800/50 border border-noir-700/40 rounded-2xl p-6">
                         <h4 className="text-label mb-3">10 Key Evidence Points</h4>
                         <div className="space-y-2">
@@ -307,11 +263,16 @@ function FailedRevealScreen() {
                     {/* Try again */}
                     <div className="text-center pt-4">
                         <p className="text-xs text-noir-500 mb-4">
-                            Now that you know the truth, can you build a perfect case?
+                            Now that you know the truth, want to try another case?
                         </p>
-                        <button onClick={resetGame} className="btn-primary">
-                            🔄 Start New Investigation
-                        </button>
+                        <div className="flex justify-center gap-4">
+                            <button onClick={resetGame} className="btn-primary">
+                                🔄 Retry This Case
+                            </button>
+                            <button onClick={goHome} className="btn-secondary">
+                                Browse Cases
+                            </button>
+                        </div>
                     </div>
                 </motion.div>
             )}
@@ -325,8 +286,12 @@ function SolvedScreen() {
     const hintPenalty = useGameStore(s => s.hintPenalty);
     const startTime = useGameStore(s => s.startTime);
     const endTime = useGameStore(s => s.endTime);
-    const resetGame = useGameStore(s => s.resetGame);
+    const goHome = useGameStore(s => s.goHome);
+    const episodeData = useGameStore(s => s.episodeData);
 
+    const getRevealData = episodeData?.getRevealData;
+    const trueTimeline = episodeData?.trueTimeline || [];
+    const revealData = getRevealData ? getRevealData() : null;
     const duration = endTime && startTime ? Math.floor((endTime - startTime) / 60000) : 0;
 
     return (
@@ -349,48 +314,48 @@ function SolvedScreen() {
                     transition={{ delay: 1, type: 'spring', stiffness: 100 }}
                     className="text-7xl"
                 >
-                    🕯️
+                    ⚖️
                 </motion.div>
                 <h2 className="text-4xl font-serif font-bold text-evidence text-shadow-warm">
                     Case Solved
                 </h2>
-                <p className="text-noir-300">The silence has been broken.</p>
+                <p className="text-noir-300">Justice has been served.</p>
             </motion.div>
 
             {/* The truth */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-                className="bg-noir-800/50 border border-evidence/20 rounded-2xl p-6 space-y-4"
-            >
-                <h3 className="text-lg font-serif font-bold text-evidence">The Truth: Adrian Cross</h3>
-                <p className="text-sm text-noir-300 leading-relaxed">
-                    Adrian Cross, the seemingly harmless family friend, orchestrated a meticulously planned
-                    locked-room murder. His calm demeanor and twenty years of trust were the perfect cover
-                    for a cold, calculated killer.
-                </p>
+            {revealData && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.5 }}
+                    className="bg-noir-800/50 border border-evidence/20 rounded-2xl p-6 space-y-4"
+                >
+                    <h3 className="text-lg font-serif font-bold text-evidence">
+                        The Truth: {revealData.killerName}
+                    </h3>
+                    <p className="text-sm text-noir-300 leading-relaxed">{revealData.summary}</p>
 
-                <div className="divider" />
+                    <div className="divider" />
 
-                <h4 className="text-label">The True Timeline</h4>
-                <div className="space-y-3 mt-3">
-                    {trueTimeline.map((item, i) => (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 2 + i * 0.15 }}
-                            className="flex gap-3 p-3 bg-noir-900/40 rounded-lg"
-                        >
-                            <span className="text-xs font-mono text-evidence/70 whitespace-nowrap min-w-[70px]">
-                                {item.time}
-                            </span>
-                            <p className="text-xs text-noir-300 leading-relaxed">{item.event}</p>
-                        </motion.div>
-                    ))}
-                </div>
-            </motion.div>
+                    <h4 className="text-label">The True Timeline</h4>
+                    <div className="space-y-3 mt-3">
+                        {trueTimeline.map((item, i) => (
+                            <motion.div
+                                key={i}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 2 + i * 0.15 }}
+                                className="flex gap-3 p-3 bg-noir-900/40 rounded-lg"
+                            >
+                                <span className="text-xs font-mono text-evidence/70 whitespace-nowrap min-w-[70px]">
+                                    {item.time}
+                                </span>
+                                <p className="text-xs text-noir-300 leading-relaxed">{item.event}</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            )}
 
             {/* Score */}
             <motion.div
@@ -420,15 +385,15 @@ function SolvedScreen() {
                 </div>
             </motion.div>
 
-            {/* Reset */}
+            {/* Actions */}
             <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 5 }}
-                className="text-center"
+                className="text-center flex justify-center gap-4"
             >
-                <button onClick={resetGame} className="btn-secondary">
-                    Start New Investigation
+                <button onClick={goHome} className="btn-primary">
+                    🔍 Browse More Cases
                 </button>
             </motion.div>
         </motion.div>

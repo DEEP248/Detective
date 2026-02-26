@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import useGameStore from '../store/gameStore';
-import { evidence } from '../data/evidence';
-import { suspects } from '../data/suspects';
 import EvidenceCard from '../components/EvidenceCard';
 import EvidenceViewer from '../components/EvidenceViewer';
 import SuspectCard from '../components/SuspectCard';
@@ -34,6 +32,12 @@ export default function InvestigationSection() {
     const caseSolved = useGameStore(s => s.caseSolved);
     const interviewedSuspects = useGameStore(s => s.interviewedSuspects);
     const getDiscoveryProgress = useGameStore(s => s.getDiscoveryProgress);
+    const episodeData = useGameStore(s => s.episodeData);
+    const goHome = useGameStore(s => s.goHome);
+
+    const evidence = episodeData?.evidence || [];
+    const suspects = episodeData?.suspects || [];
+    const meta = episodeData?.meta;
 
     const [selectedEvidence, setSelectedEvidence] = useState(null);
     const [selectedSuspect, setSelectedSuspect] = useState(null);
@@ -67,13 +71,20 @@ export default function InvestigationSection() {
     const discoveredItems = evidence.filter(e => discoveredEvidence.includes(e.id));
     const unreadCount = discoveredEvidence.filter(id => !readEvidence.includes(id)).length;
 
-    const categories = [
-        { id: 'crime_scene', label: 'Crime Scene' },
-        { id: 'physical', label: 'Physical' },
-        { id: 'house', label: 'House Systems' },
-        { id: 'timing', label: 'Timing' },
-        { id: 'document', label: 'Documents' },
-    ];
+    // Dynamically build categories from discovered evidence
+    const categoryMap = {
+        crime_scene: 'Crime Scene',
+        physical: 'Physical',
+        house: 'House Systems',
+        timing: 'Timing',
+        document: 'Documents',
+        testimony: 'Testimony',
+        background: 'Background',
+        method: 'Method',
+        misdirection: 'Misdirection',
+    };
+    const activeCategories = [...new Set(discoveredItems.map(e => e.category))];
+    const categories = activeCategories.map(id => ({ id, label: categoryMap[id] || id }));
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -82,9 +93,12 @@ export default function InvestigationSection() {
                 <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
                     {/* Left - case info */}
                     <div className="flex items-center gap-4">
+                        <button onClick={goHome} className="text-noir-500 hover:text-evidence transition-colors text-xs mr-2">
+                            ← Home
+                        </button>
                         <div>
-                            <h1 className="text-sm font-serif font-bold text-noir-200">The Silence Protocol</h1>
-                            <p className="text-[10px] text-noir-500">Case #MP-2024-7742</p>
+                            <h1 className="text-sm font-serif font-bold text-noir-200">{meta?.title || 'Detective Duniya'}</h1>
+                            <p className="text-[10px] text-noir-500">Episode {meta?.number}</p>
                         </div>
                     </div>
 
@@ -96,7 +110,7 @@ export default function InvestigationSection() {
                         </div>
                         <div className="w-px h-6 bg-noir-700" />
                         <div className="text-center">
-                            <p className="text-xs font-mono text-evidence">{interviewedSuspects.length}/6</p>
+                            <p className="text-xs font-mono text-evidence">{interviewedSuspects.length}/{suspects.length}</p>
                             <p className="text-[9px] text-noir-500">Interviewed</p>
                         </div>
                         <div className="w-px h-6 bg-noir-700" />
@@ -206,7 +220,7 @@ export default function InvestigationSection() {
                             {/* Locked evidence hint */}
                             {discoveredItems.length < evidence.length && (
                                 <div className="mt-8 p-4 bg-noir-800/20 border border-dashed border-noir-700/30 
-                               rounded-xl text-center">
+                                rounded-xl text-center">
                                     <p className="text-xs text-noir-500">
                                         🔒 {evidence.length - discoveredItems.length} pieces of evidence remain locked.
                                         Review existing evidence to unlock new findings.
@@ -228,7 +242,7 @@ export default function InvestigationSection() {
                             <div className="mb-6">
                                 <h2 className="text-xl font-serif font-bold text-noir-100">Suspect Profiles</h2>
                                 <p className="text-xs text-noir-400 mt-1">
-                                    {interviewedSuspects.length}/6 suspects fully interviewed.
+                                    {interviewedSuspects.length}/{suspects.length} suspects fully interviewed.
                                     Click to review profiles and conduct interviews.
                                 </p>
                             </div>

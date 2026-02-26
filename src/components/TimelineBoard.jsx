@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
-import { timelineEvents } from '../data/timeline';
+import useGameStore from '../store/gameStore';
 import { staggerContainer, staggerItem } from '../animations/variants';
 
 export default function TimelineBoard() {
+    const timelineEvents = useGameStore(s => s.episodeData?.timelineEvents) || [];
+    const meta = useGameStore(s => s.episodeData?.meta);
     const categoryColors = {
         social: 'bg-blue-900/30 border-blue-800/40',
         conflict: 'bg-red-900/30 border-red-800/40',

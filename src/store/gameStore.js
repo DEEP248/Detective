@@ -1,88 +1,124 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { evidence } from '../data/evidence';
 
 const useGameStore = create(
     persist(
         (set, get) => ({
-            // Game state
+            // ========== PLATFORM STATE ==========
+            currentPage: 'home',           // 'home' | 'playing'
+            activeEpisodeId: null,         // 'episode1' | 'episode2' | etc.
+            episodeData: null,             // loaded episode data (lazy)
+
+            // ========== GAME STATE ==========
             gameStarted: false,
-            currentSection: 'intro',  // intro, briefing, investigation, accusation, solved
+            currentSection: 'intro',       // intro, briefing, investigation, solved
 
-            // Evidence discovery
-            discoveredEvidence: [],    // array of evidence ids
-            readEvidence: [],          // evidence the player has actually read (opened)
+            // Evidence
+            discoveredEvidence: [],
+            readEvidence: [],
 
-            // Suspect interactions
-            interviewedSuspects: [],   // suspect ids that have been fully interviewed
-            currentInterview: null,    // suspect id currently being interviewed
-            revealedQuestions: {},     // { suspectId: [questionIndices] }
+            // Suspects
+            interviewedSuspects: [],
+            currentInterview: null,
+            revealedQuestions: {},
 
-            // Notes & board
+            // Notes
             playerNotes: '',
-            boardPositions: {},        // { evidenceId: { x, y } } for evidence board positions
-
-            // Timeline arrangement
-            playerTimeline: [],        // player's arranged timeline event ids
 
             // Hints
             usedHints: [],
             hintPenalty: 0,
 
-            // Accusation attempts
+            // Accusation
             accusationAttempts: 0,
             maxAccusationAttempts: 3,
             caseSolved: false,
             accusationResult: null,
 
-            // UI state
-            activeModal: null,         // id of currently open modal/evidence
-            activeTab: 'evidence',     // evidence, suspects, timeline, relationships, documents
+            // UI
+            activeModal: null,
+            activeTab: 'evidence',
 
-            // Time tracking
+            // Time
             startTime: null,
             endTime: null,
 
-            // Actions
-            startGame: () => set({
-                gameStarted: true,
-                currentSection: 'briefing',
-                startTime: Date.now(),
-                // Auto-discover initial evidence
-                discoveredEvidence: ['crime_scene_overview', 'power_outage_report', 'will_document', 'clara_stolen_docs', 'eleanor_phone_records'],
+            // ========== PLATFORM ACTIONS ==========
+            playEpisode: (episodeId, data) => set({
+                currentPage: 'playing',
+                activeEpisodeId: episodeId,
+                episodeData: data,
+                // Reset game state for fresh play
+                gameStarted: false,
+                currentSection: 'intro',
+                discoveredEvidence: [],
+                readEvidence: [],
+                interviewedSuspects: [],
+                currentInterview: null,
+                revealedQuestions: {},
+                playerNotes: '',
+                usedHints: [],
+                hintPenalty: 0,
+                accusationAttempts: 0,
+                caseSolved: false,
+                accusationResult: null,
+                activeModal: null,
+                activeTab: 'evidence',
+                startTime: null,
+                endTime: null,
             }),
+
+            goHome: () => set({
+                currentPage: 'home',
+                activeEpisodeId: null,
+                episodeData: null,
+                gameStarted: false,
+                currentSection: 'intro',
+            }),
+
+            // ========== GAME ACTIONS ==========
+            startGame: () => {
+                const state = get();
+                const ep = state.episodeData;
+                if (!ep) return;
+                set({
+                    gameStarted: true,
+                    currentSection: 'briefing',
+                    startTime: Date.now(),
+                    discoveredEvidence: ep.initialEvidence || [],
+                });
+            },
 
             proceedToInvestigation: () => set({ currentSection: 'investigation' }),
 
             discoverEvidence: (evidenceId) => {
                 const state = get();
                 if (state.discoveredEvidence.includes(evidenceId)) return;
-
-                // Check prerequisites
-                const item = evidence.find(e => e.id === evidenceId);
+                const ep = state.episodeData;
+                if (!ep) return;
+                const item = ep.evidence.find(e => e.id === evidenceId);
                 if (!item) return;
                 const prereqsMet = item.prerequisites.every(p => state.discoveredEvidence.includes(p));
                 if (!prereqsMet) return;
-
                 set({ discoveredEvidence: [...state.discoveredEvidence, evidenceId] });
             },
 
             markEvidenceRead: (evidenceId) => {
                 const state = get();
                 if (state.readEvidence.includes(evidenceId)) return;
+                const ep = state.episodeData;
+                if (!ep) return;
 
                 set({ readEvidence: [...state.readEvidence, evidenceId] });
 
-                // After reading, check what new evidence can be unlocked
                 const currentDiscovered = [...state.discoveredEvidence];
                 const newlyUnlocked = [];
 
-                evidence.forEach(e => {
+                ep.evidence.forEach(e => {
                     if (!currentDiscovered.includes(e.id) && !newlyUnlocked.includes(e.id)) {
                         const allPrereqs = e.prerequisites.every(p =>
                             currentDiscovered.includes(p) || newlyUnlocked.includes(p)
                         );
-                        // Only auto-discover if all prereqs are in readEvidence
                         const allRead = e.prerequisites.every(p =>
                             [...state.readEvidence, evidenceId].includes(p)
                         );
@@ -118,16 +154,6 @@ const useGameStore = create(
 
             setPlayerNotes: (notes) => set({ playerNotes: notes }),
 
-            setBoardPosition: (evidenceId, position) => {
-                const state = get();
-                set({
-                    boardPositions: {
-                        ...state.boardPositions,
-                        [evidenceId]: position,
-                    },
-                });
-            },
-
             useHint: (hintId, cost) => {
                 const state = get();
                 if (state.usedHints.includes(hintId)) return;
@@ -144,7 +170,6 @@ const useGameStore = create(
             attemptAccusation: (result) => {
                 const state = get();
                 const newAttempts = state.accusationAttempts + 1;
-
                 if (result.success) {
                     set({
                         caseSolved: true,
@@ -163,32 +188,35 @@ const useGameStore = create(
 
             clearAccusationResult: () => set({ accusationResult: null }),
 
-            resetGame: () => set({
-                gameStarted: false,
-                currentSection: 'intro',
-                discoveredEvidence: [],
-                readEvidence: [],
-                interviewedSuspects: [],
-                currentInterview: null,
-                revealedQuestions: {},
-                playerNotes: '',
-                boardPositions: {},
-                playerTimeline: [],
-                usedHints: [],
-                hintPenalty: 0,
-                accusationAttempts: 0,
-                caseSolved: false,
-                accusationResult: null,
-                activeModal: null,
-                activeTab: 'evidence',
-                startTime: null,
-                endTime: null,
-            }),
+            resetGame: () => {
+                const state = get();
+                set({
+                    gameStarted: false,
+                    currentSection: 'intro',
+                    discoveredEvidence: [],
+                    readEvidence: [],
+                    interviewedSuspects: [],
+                    currentInterview: null,
+                    revealedQuestions: {},
+                    playerNotes: '',
+                    usedHints: [],
+                    hintPenalty: 0,
+                    accusationAttempts: 0,
+                    caseSolved: false,
+                    accusationResult: null,
+                    activeModal: null,
+                    activeTab: 'evidence',
+                    startTime: null,
+                    endTime: null,
+                });
+            },
 
             // Computed-like getters
             getDiscoveryProgress: () => {
                 const state = get();
-                const total = evidence.length;
+                const ep = state.episodeData;
+                if (!ep) return 0;
+                const total = ep.evidence.length;
                 return Math.round((state.discoveredEvidence.length / total) * 100);
             },
 
@@ -212,8 +240,27 @@ const useGameStore = create(
             },
         }),
         {
-            name: 'silence-protocol-save',
-            version: 1,
+            name: 'detective-duniya-save',
+            version: 2,
+            partialize: (state) => ({
+                // Only persist game progress, not episodeData (too large)
+                currentPage: state.currentPage,
+                activeEpisodeId: state.activeEpisodeId,
+                gameStarted: state.gameStarted,
+                currentSection: state.currentSection,
+                discoveredEvidence: state.discoveredEvidence,
+                readEvidence: state.readEvidence,
+                interviewedSuspects: state.interviewedSuspects,
+                revealedQuestions: state.revealedQuestions,
+                playerNotes: state.playerNotes,
+                usedHints: state.usedHints,
+                hintPenalty: state.hintPenalty,
+                accusationAttempts: state.accusationAttempts,
+                caseSolved: state.caseSolved,
+                activeTab: state.activeTab,
+                startTime: state.startTime,
+                endTime: state.endTime,
+            }),
         }
     )
 );

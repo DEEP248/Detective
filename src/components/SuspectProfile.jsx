@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Modal from './Modal';
 import useGameStore from '../store/gameStore';
-import { suspects } from '../data/suspects';
 
 export default function SuspectProfile({ suspectId, onClose }) {
+    const suspects = useGameStore(s => s.episodeData?.suspects) || [];
     const suspect = suspects.find(s => s.id === suspectId);
     const revealedQuestions = useGameStore(s => s.revealedQuestions);
     const revealQuestion = useGameStore(s => s.revealQuestion);

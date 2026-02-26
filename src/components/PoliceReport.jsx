@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
-import { victimProfile } from '../data/relationships';
+import useGameStore from '../store/gameStore';
 import { staggerContainer, staggerItem } from '../animations/variants';
 
 export default function PoliceReport() {
+    const victimProfile = useGameStore(s => s.episodeData?.victimProfile) || {};
+    const meta = useGameStore(s => s.episodeData?.meta);
     return (
         <div className="space-y-6">
             <div>
