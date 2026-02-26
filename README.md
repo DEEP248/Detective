@@ -1,148 +1,77 @@
 <div align="center">
 
-# 🕯️ The Silence Protocol
+# 🔍 Detective Duniya
 
-### Episode 1: The Last Candle
+### *Think Deep. Doubt Everyone.*
 
-[![Live Demo](https://img.shields.io/badge/▶_PLAY_NOW-silence--protocol.vercel.app-c9a84c?style=for-the-badge&logo=vercel&logoColor=white)](https://silence-protocol.vercel.app)
+[![Live Demo](https://img.shields.io/badge/▶_PLAY_NOW-detective--duniya.vercel.app-c9a84c?style=for-the-badge&logo=vercel&logoColor=white)](https://detective-duniya.vercel.app)
 
 [![React](https://img.shields.io/badge/React_18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev)
 [![Vite](https://img.shields.io/badge/Vite_5-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev)
 [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=flat-square&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![Zustand](https://img.shields.io/badge/Zustand-443E38?style=flat-square&logo=npm&logoColor=white)](https://zustand-demo.pmnd.rs/)
-[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000?style=flat-square&logo=vercel&logoColor=white)](https://silence-protocol.vercel.app)
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000?style=flat-square&logo=vercel&logoColor=white)](https://detective-duniya.vercel.app)
 
 <br/>
 
-*An immersive, browser-based interactive detective mystery.*
-*Investigate a locked-room murder. Interrogate suspects. Connect the evidence. Find the killer.*
+*Interactive mystery stories made for smart minds.*
+*Investigate. Interrogate. Deduce.*
 
 <br/>
 
-<img src="https://img.shields.io/badge/Playtime-40--45_min-8b6f9e?style=for-the-badge" alt="Playtime"/>
-<img src="https://img.shields.io/badge/Difficulty-Hard-a33a3a?style=for-the-badge" alt="Difficulty"/>
+<img src="https://img.shields.io/badge/Episodes-2_Available-c9a84c?style=for-the-badge" alt="Episodes"/>
+<img src="https://img.shields.io/badge/Playtime-40--45_min_each-8b6f9e?style=for-the-badge" alt="Playtime"/>
 <img src="https://img.shields.io/badge/No_Backend-100%25_Frontend-2ea043?style=for-the-badge" alt="Frontend Only"/>
 
 </div>
 
 ---
 
-## 🔍 The Case
+## 📖 Episodes
 
-> **October 14th. 9:17 PM.** The lights go out at Hale Manor during a violent storm. Fifteen minutes of darkness. When the power returns at 9:32 PM, **Victor Hale** — financier, philanthropist, and host of the dinner party — is found **dead in the library**.
+### Episode 1: 🕯️ The Last Candle
+> **Setting:** Hale Manor, English countryside
 >
-> **Cause of death:** Blunt force trauma. The fireplace poker is missing.
+> A dinner party at an English manor turns deadly. The host, **Victor Hale**, is found dead in a locked library during a blackout. The fireplace poker is missing. The window was locked from inside. **6 suspects. One truth.**
+
+### Episode 2: ☠️ The Silent Poison
+> **Setting:** Malhotra Haveli, Jaipur, Rajasthan
 >
-> **The impossible puzzle:** The library window was **locked from inside**. No forced entry. The door was ajar. Six guests were in the house. One of them is a killer.
->
-> **Your mission:** Find the truth.
+> A businessman collapses after drinking saffron milk at a lavish engagement ceremony. The poison was in his glass only. The CCTV footage from the critical 10 minutes is missing. **7 suspects. One killer.**
+
+### Episode 3–10: 🔒 Coming Soon
+> New episodes added regularly. Each is a self-contained mystery you can play in any order.
 
 ---
 
-## 🛠️ How to Solve
+## 🎮 How to Play
 
-### 1. Gather Evidence (Board Tab)
-Start by examining the crime scene. Each clue you read will unlock new pieces of evidence. You need at least **8 key findings** before the authorities will accept an official accusation.
+1. **Choose a Case** — Pick any episode from the homepage
+2. **Gather Evidence** — Examine clues; each one unlocks new findings
+3. **Interrogate Suspects** — Question everyone; look for contradictions
+4. **Study the Timeline** — Map every movement during the critical window
+5. **Make Your Accusation** — Select the killer. You have **3 attempts**.
 
-### 2. Interrogate Suspects (Suspects Tab)
-Every guest has secrets. Question them about the timeline, their relationship with Victor, and the blackout. Look for contradictions — one person's alibi doesn't align with the forensic facts.
-
-### 3. Reconstruct the Timeline (Timeline Tab)
-The window between **9:17 PM (Blackout)** and **9:32 PM (Body Found)** is everything. Map every guest's location and cross-reference them with the physical evidence.
-
-### 4. Provide the Solution (Accuse Tab)
-Once you're certain, make your charge. You must:
-- Select the **one true killer**.
-- Write a theory (100+ chars) explaining the **Method, Motive, and Opportunity**.
-- Correctly identify at least **8 of 10 logical connections** (the system detects keywords in your theory).
-
-### 🆘 Getting Stuck?
-If you can't see the path forward:
-- **Use Hints (💡)**: Open the hint menu in the top bar. Progressive clues will guide you toward the next step.
-- **The Solution Dossier**: If you want to see the full answer, open the **Hint Menu (💡)** and click the red **"REVEAL FULL SOLUTION"** button at the bottom. This will explain the killer, method, motive, and all 10 logic points minute-by-minute.
+### 🆘 Stuck?
+- **Use Hints (💡)** — Progressive clues that guide you (costs score points)
+- **Reveal Solution** — Click "Reveal Full Solution" in the hint menu to see the full answer
 
 ---
 
-## 🎮 Features
+## ✨ Features
 
-<table>
-<tr>
-<td width="50%">
-
-### 🧩 Deep Investigation System
-- **20 evidence items** across 5 categories
-- **Progressive unlocking** — clues reveal new clues
-- **Red herrings** designed to mislead
-- Evidence board with categorized findings
-
-</td>
-<td width="50%">
-
-### 👥 6 Complex Suspects
-- Detailed profiles with backstories & motives
-- **Interactive interviews** with 5–8 questions each
-- Psychological misdirection — the obvious suspects aren't the killer
-- Suspicion levels that challenge assumptions
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### ⏱️ Timeline Reconstruction
-- 16 chronological events with timestamps
-- Color-coded categories (social, conflict, critical)
-- Clock discrepancies and misleading testimony
-- Murder window analysis
-
-</td>
-<td width="50%">
-
-### 🔗 Relationship Web
-- Visual map of connections between all characters
-- Tension indicators (high / medium / low)
-- Hidden motives revealed through relationships
-- Victim profile with full backstory
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### ⚖️ Accusation System
-- Select a suspect + write a detailed explanation
-- System validates against **10 logical evidence points**
-- Must connect at least **8 of 10** to solve the case
-- **3 attempts maximum** — no brute force
-- Dramatic animated reveal on success
-
-</td>
-<td width="50%">
-
-### 🛠️ Player Tools
-- 📝 **Detective's Notebook** — personal notes
-- 💡 **Hint System** — progressive hints (costs score)
-- 📄 **Police Report** — official case documentation
-- 💾 **Auto-save** — progress saved to localStorage
-- 📊 **Scoring** — time, hints, attempts tracked
-
-</td>
-</tr>
-</table>
-
----
-
-## 🎨 Design Philosophy
-
-| Principle | Implementation |
-|-----------|---------------|
-| **Noir Aesthetic** | Deep grey backgrounds, warm amber highlights, subtle shadows |
-| **Professional Tone** | No childish elements — serious, immersive detective experience |
-| **Smooth Animations** | Framer Motion page transitions, staggered reveals, modal animations |
-| **Psychological Design** | Obvious suspects look guilty; the real killer appears harmless |
-| **Frustrating but Fair** | Every clue is findable. Every answer is logical. No guessing. |
-| **Typography** | Playfair Display (serif) + Inter (sans) + JetBrains Mono (code/reports) |
+| Feature | Details |
+|---------|---------|
+| 🧩 **Deep Investigation** | 20 evidence items per episode, progressive unlocking, red herrings |
+| 👥 **Complex Suspects** | 6–7 suspects with detailed profiles, interviews, and hidden motives |
+| ⏱️ **Timeline Analysis** | Chronological events with timestamps, contradictions, and critical windows |
+| 🔗 **Relationship Map** | Visual web of connections, tensions, and secrets between characters |
+| ⚖️ **Accusation System** | Select the killer — 3 attempts max, no brute force |
+| 💡 **Hint System** | Progressive hints + full solution reveal as last resort |
+| 📝 **Detective's Notebook** | Personal notes that save automatically |
+| 💾 **Auto-Save** | Progress saved per episode to localStorage |
+| 📊 **Scoring** | Time, hints, and attempts tracked for each case |
 
 ---
 
@@ -150,120 +79,100 @@ If you can't see the path forward:
 
 ```
 src/
-├── 📁 components/        # 11 Reusable UI components
-│   ├── AccusationPanel    # Suspect selection & logic validation
-│   ├── EvidenceCard       # Evidence board cards
-│   ├── EvidenceViewer     # Full evidence detail modal
-│   ├── HintSystem         # Progressive hints with score cost
-│   ├── Modal              # Animated modal with ESC support
-│   ├── Notepad            # Slide-out detective notebook
-│   ├── PoliceReport       # Official case file view
-│   ├── RelationshipMap    # Suspect connection web
-│   ├── SuspectCard        # Suspect grid cards
-│   ├── SuspectProfile     # Detailed profile + interview Q&A
-│   └── TimelineBoard      # Chronological event timeline
+├── 📁 episodes/              # Episode data (scalable to 10+)
+│   ├── index.js              # Episode registry + loader
+│   ├── episode1/
+│   │   ├── data/             # suspects, evidence, timeline, relationships
+│   │   └── logic/            # puzzleLogic (10 logic points, hints, reveal)
+│   └── episode2/
+│       ├── data/
+│       └── logic/
 │
-├── 📁 sections/           # 3 Major game screens
-│   ├── IntroSection       # Cinematic typewriter intro
-│   ├── BriefingSection    # 3-page case briefing
-│   └── InvestigationSection  # Main workspace (6 tabs)
+├── 📁 pages/                 # Top-level pages
+│   └── HomePage.jsx          # Hero, episode grid, features
 │
-├── 📁 data/               # Immutable game data
-│   ├── suspects.js        # 6 suspects, alibis, interviews
-│   ├── evidence.js        # 20 evidence items + prerequisites
-│   ├── timeline.js        # Events + hidden true timeline
-│   └── relationships.js   # Connection network + victim
+├── 📁 sections/              # Game screens
+│   ├── IntroSection.jsx      # Cinematic typewriter intro
+│   ├── BriefingSection.jsx   # 3-page case briefing
+│   └── InvestigationSection.jsx  # Main workspace (6 tabs)
 │
-├── 📁 logic/              # Puzzle engine (separate from UI)
-│   └── puzzleLogic.js     # 10 logic points, validation, hints
+├── 📁 components/            # 11 reusable UI components
+│   ├── AccusationPanel.jsx   # Suspect selection + reveal
+│   ├── EvidenceViewer.jsx    # Evidence detail modal
+│   ├── HintSystem.jsx        # Hints + solution reveal
+│   ├── SuspectProfile.jsx    # Profile + interview Q&A
+│   ├── TimelineBoard.jsx     # Event timeline
+│   ├── RelationshipMap.jsx   # Connection web
+│   └── ...                   # Modal, Notepad, Cards, etc.
 │
-├── 📁 store/              # State management
-│   └── gameStore.js       # Zustand + localStorage persist
+├── 📁 store/                 # Zustand state (episode-aware)
+│   └── gameStore.js          # Per-episode save, dynamic data
 │
-├── 📁 animations/         # Motion design
-│   └── variants.js        # 15 Framer Motion presets
+├── 📁 animations/            # Framer Motion presets
+│   └── variants.js
 │
-└── 📁 utils/              # Helpers
-    └── helpers.js         # Formatting utilities
+└── App.jsx                   # Router: Home ↔ Episode gameplay
 ```
 
-> **Design principle:** Puzzle logic is fully separated from UI. All game data is immutable. State is managed centrally through Zustand with automatic localStorage persistence.
+> **Key design:** All components read data from the store's `episodeData` — no hardcoded imports. Adding a new episode requires only creating data files and registering in `episodes/index.js`.
 
 ---
 
 ## 🚀 Quick Start
 
 ```bash
-# Clone the repository
 git clone https://github.com/DEEP248/Detective.git
 cd Detective
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
+```
 
-# Build for production
-npm run build
+## 🌐 Deployment
+
+```bash
+# Deploy to Vercel
+npx vercel --prod
+
+# Or build for any static host
+npm run build    # → dist/ folder
 ```
 
 ---
 
-## 🌐 Deployment
+## 📋 Adding a New Episode
 
-This project is deployed on **Vercel** as a static site. No backend required.
-
-| Method | Steps |
-|--------|-------|
-| **Vercel CLI** | `npm i -g vercel && vercel --prod` |
-| **GitHub Integration** | Import repo on [vercel.com](https://vercel.com) → Framework: Vite → Deploy |
-| **Manual** | `npm run build` → Upload `dist/` folder to any static host |
-
-**Build output:** ~377 KB JS + ~36 KB CSS (gzipped: ~126 KB total)
+1. Create `src/episodes/episodeN/data/` with `suspects.js`, `evidence.js`, `timeline.js`, `relationships.js`
+2. Create `src/episodes/episodeN/logic/puzzleLogic.js` with validation, hints, and reveal data
+3. Add static imports and episode metadata to `src/episodes/index.js`
+4. That's it — the homepage and all components auto-adapt
 
 ---
 
-## 🧠 Game Design Notes
+## 🗺️ Roadmap
 
-<details>
-<summary><b>📌 Why is this game hard? (No spoilers)</b></summary>
-
-- The most suspicious-looking suspects have the strongest alibis
-- Multiple characters lied — but only one lied to cover a murder
-- Two separate financial crimes exist — only one is the motive
-- A key piece of volunteered information is the biggest clue
-- The "locked room" isn't actually locked the way you think
-- Time-of-death estimates are deliberately misleading (but medically accurate)
-- The killer never directly lies in any interview
-
-</details>
-
-<details>
-<summary><b>🔧 Technical Design Decisions</b></summary>
-
-- **No backend/database** — Everything runs in the browser for free hosting
-- **Zustand over Redux** — Simpler API for game state, built-in persist middleware
-- **TailwindCSS** — Rapid iteration on the dark theme with custom color palette
-- **Framer Motion** — Professional-grade animations without heavy libraries
-- **Progressive unlock system** — Evidence prerequisites create natural investigation flow
-- **Keyword-based validation** — Accusation text is analyzed for 10 specific logical connections
-- **Anti-brute-force** — 3 attempts max, 8/10 connections required, 100-char minimum explanation
-
-</details>
+| Phase | Status | Details |
+|-------|--------|---------|
+| Episodes 1–2 | ✅ Done | The Last Candle + The Silent Poison |
+| Episodes 3–10 | 🔄 In Progress | New episode added daily |
+| Scalability | 📋 Planned | Lazy loading after 10 episodes |
+| User Accounts | 📋 Planned | Login, save progress to cloud |
+| Payments | 📋 Planned | Premium episodes, subscriptions |
+| Backend | 📋 Planned | API, database, analytics |
+| Leaderboard | 📋 Planned | Global rankings, scores |
+| Daily Challenge | 📋 Planned | Mini-mystery every day |
 
 ---
 
 ## 📄 Tech Stack
 
-| Technology | Purpose | Version |
-|-----------|---------|---------|
-| [React](https://react.dev) | UI Framework | 18.2 |
-| [Vite](https://vitejs.dev) | Build Tool | 5.1 |
-| [TailwindCSS](https://tailwindcss.com) | Styling | 3.4 |
-| [Framer Motion](https://www.framer.com/motion/) | Animations | 11.0 |
-| [Zustand](https://zustand-demo.pmnd.rs/) | State Management | 4.5 |
-| [Vercel](https://vercel.com) | Hosting | — |
+| Technology | Purpose |
+|-----------|---------|
+| [React 18](https://react.dev) | UI Framework |
+| [Vite 5](https://vitejs.dev) | Build Tool |
+| [TailwindCSS 3](https://tailwindcss.com) | Styling |
+| [Framer Motion 11](https://www.framer.com/motion/) | Animations |
+| [Zustand 4](https://zustand-demo.pmnd.rs/) | State Management |
+| [Vercel](https://vercel.com) | Hosting |
 
 ---
 
@@ -271,7 +180,7 @@ This project is deployed on **Vercel** as a static site. No backend required.
 
 ### 🕵️ Can you solve it?
 
-[![Play Now](https://img.shields.io/badge/🔍_BEGIN_INVESTIGATION-silence--protocol.vercel.app-c9a84c?style=for-the-badge)](https://silence-protocol.vercel.app)
+[![Play Now](https://img.shields.io/badge/🔍_BEGIN_INVESTIGATION-detective--duniya.vercel.app-c9a84c?style=for-the-badge)](https://detective-duniya.vercel.app)
 
 <br/>
 
