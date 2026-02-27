@@ -98,7 +98,7 @@ export default function HomePage() {
                             viewport={{ once: true }}
                             transition={{ delay: i * 0.1 }}
                             onClick={() => handlePlay(ep)}
-                            className={`group relative rounded-2xl overflow-hidden border transition-all duration-300
+                            className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 flex flex-col
                                 ${ep.available
                                     ? 'cursor-pointer border-noir-700/50 hover:border-evidence/40 hover:shadow-glow bg-noir-900/80'
                                     : 'cursor-not-allowed border-noir-800/30 bg-noir-900/40'
@@ -122,12 +122,12 @@ export default function HomePage() {
                             </div>
 
                             {/* Card Body */}
-                            <div className="p-5 pt-3 space-y-3">
-                                <p className={`text-xs leading-relaxed ${ep.available ? 'text-noir-400' : 'text-noir-600'}`}>
+                            <div className="p-5 pt-3 space-y-3 flex-1 flex flex-col">
+                                <p className={`text-xs leading-relaxed flex-1 ${ep.available ? 'text-noir-400' : 'text-noir-600'}`}>
                                     {ep.description}
                                 </p>
 
-                                <div className="flex items-center gap-3 text-[10px]">
+                                <div className="flex items-center gap-3 text-[10px] mt-auto pt-2">
                                     {ep.available ? (
                                         <>
                                             <span className="px-2 py-0.5 rounded-full bg-blood-600/20 text-blood-400 font-medium">
