@@ -222,8 +222,11 @@ const useGameStore = create(
 
             canMakeAccusation: () => {
                 const state = get();
+                const ep = state.episodeData;
+                const totalEvidence = ep?.evidence?.length || 20;
+                const minRequired = Math.max(2, Math.ceil(totalEvidence * 0.6));
                 return state.accusationAttempts < state.maxAccusationAttempts &&
-                    state.discoveredEvidence.length >= 8 &&
+                    state.discoveredEvidence.length >= minRequired &&
                     !state.caseSolved;
             },
 

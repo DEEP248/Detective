@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import IntroSection from './sections/IntroSection';
 import BriefingSection from './sections/BriefingSection';
 import InvestigationSection from './sections/InvestigationSection';
+import RealTimeSection from './episodes/episode3/components/RealTimeSection';
 
 export default function App() {
     const currentPage = useGameStore(s => s.currentPage);
@@ -37,5 +38,11 @@ export default function App() {
     if (currentSection === 'briefing') {
         return <BriefingSection />;
     }
+
+    // Episode 3 uses RealTimeSection instead of InvestigationSection
+    if (episodeData?.gameMode === 'realtime') {
+        return <RealTimeSection />;
+    }
+
     return <InvestigationSection />;
 }

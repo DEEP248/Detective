@@ -11,6 +11,13 @@ import { timelineEvents as ep2Timeline, trueTimeline as ep2TrueTimeline } from '
 import { relationships as ep2Relationships, victimProfile as ep2Victim } from './episode2/data/relationships.js';
 import * as ep2Logic from './episode2/logic/puzzleLogic.js';
 
+import { evidence as ep3Evidence, getEvidenceById as ep3GetById, getEvidenceByCategory as ep3GetByCat, getKeyEvidence as ep3GetKey } from './episode3/data/evidence.js';
+import { suspects as ep3Suspects, getSuspectById as ep3GetSuspect } from './episode3/data/suspects.js';
+import { timelineEvents as ep3Timeline, trueTimeline as ep3TrueTimeline, suspectMovements as ep3Movements, storyEvents as ep3StoryEvents } from './episode3/data/timeline.js';
+import { relationships as ep3Relationships, victimProfile as ep3Victim } from './episode3/data/relationships.js';
+import { rooms as ep3Rooms, getRoomById as ep3GetRoom } from './episode3/data/rooms.js';
+import * as ep3Logic from './episode3/logic/puzzleLogic.js';
+
 export const episodes = [
     {
         id: 'episode1',
@@ -45,17 +52,18 @@ export const episodes = [
     {
         id: 'episode3',
         number: 3,
-        title: 'The Vanishing Act',
-        subtitle: 'Coming Soon',
-        difficulty: '???',
-        time: '???',
-        setting: '???',
-        icon: '🎭',
-        description: 'A famous actress disappears mid-performance. The curtain falls — and she is gone.',
-        available: false,
-        color: '#7a6a9e',
-        suspectCount: 0,
-        evidenceCount: 0,
+        title: 'The Blackout Birthday',
+        subtitle: 'A Real-Time Murder at a Mumbai Penthouse',
+        difficulty: 'Medium',
+        time: '15–18 min',
+        setting: 'India',
+        icon: '🎂',
+        description: 'A birthday party at a Mumbai penthouse. 5 guests. A real-time countdown. At minute 10, the lights go out. At minute 11, the host is dead.',
+        available: true,
+        color: '#e85d99',
+        suspectCount: 5,
+        evidenceCount: 5,
+        gameMode: 'realtime',
     },
     {
         id: 'episode4',
@@ -187,6 +195,56 @@ const episodeDataMap = {
             highlightLine: 5,
         },
         initialEvidence: ['scene_overview', 'poison_report', 'cctv_gap', 'glass_analysis', 'guest_list'],
+    },
+    episode3: {
+        evidence: ep3Evidence, getEvidenceById: ep3GetById, getEvidenceByCategory: ep3GetByCat, getKeyEvidence: ep3GetKey,
+        suspects: ep3Suspects, getSuspectById: ep3GetSuspect,
+        timelineEvents: ep3Timeline, trueTimeline: ep3TrueTimeline,
+        relationships: ep3Relationships, victimProfile: ep3Victim,
+        rooms: ep3Rooms, getRoomById: ep3GetRoom,
+        suspectMovements: ep3Movements, storyEvents: ep3StoryEvents,
+        ...ep3Logic,
+        meta: episodes[2],
+        briefing: {
+            pages: [
+                {
+                    title: 'The Party',
+                    icon: '🎂',
+                    content: [
+                        'Sanya Mehra is turning 30. A penthouse party in Bandra, Mumbai. Five guests. Good food, old tensions.',
+                        'You are an observer. Watch. Listen. Explore the rooms. Talk to people.',
+                        'Time is ticking. Something is about to happen.',
+                    ],
+                },
+                {
+                    title: 'The Rules',
+                    icon: '⏱️',
+                    content: [
+                        '15-minute real-time countdown. Navigate rooms freely. Click suspects to hear them.',
+                        'At minute 10, the lights will go out. At minute 11, someone will be dead.',
+                        'After the murder: investigate, solve puzzles, and name the killer. 3 attempts.',
+                    ],
+                },
+            ],
+            caseNumber: 'DD-EP3-3007',
+        },
+        intro: {
+            lines: [
+                'Mumbai. 22nd floor. Bandra West.',
+                'A birthday party. Five guests.',
+                'Old friends. Older secrets.',
+                'The music plays. The clock ticks.',
+                'At minute ten...',
+                'The lights go out.',
+                'One minute of darkness.',
+                'When they come back on...',
+                'The birthday girl is dead.',
+                'The cake knife is in her chest.',
+            ],
+            highlightLine: 5,
+        },
+        initialEvidence: ['broken_glass', 'missing_knife'],
+        gameMode: 'realtime',
     },
 };
 
