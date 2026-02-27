@@ -20,8 +20,8 @@
 
 <br/>
 
-<img src="https://img.shields.io/badge/Episodes-2_Available-c9a84c?style=for-the-badge" alt="Episodes"/>
-<img src="https://img.shields.io/badge/Playtime-40--45_min_each-8b6f9e?style=for-the-badge" alt="Playtime"/>
+<img src="https://img.shields.io/badge/Episodes-3_Available-c9a84c?style=for-the-badge" alt="Episodes"/>
+<img src="https://img.shields.io/badge/Playtime-15--45_min-8b6f9e?style=for-the-badge" alt="Playtime"/>
 <img src="https://img.shields.io/badge/No_Backend-100%25_Frontend-2ea043?style=for-the-badge" alt="Frontend Only"/>
 
 </div>
@@ -40,7 +40,14 @@
 >
 > A businessman collapses after drinking saffron milk at a lavish engagement ceremony. The poison was in his glass only. The CCTV footage from the critical 10 minutes is missing. **7 suspects. One killer.**
 
-### Episode 3–10: 🔒 Coming Soon
+### Episode 3: 🎂 The Blackout Birthday ⚡ NEW
+> **Setting:** Penthouse apartment, Bandra, Mumbai
+>
+> A birthday party for **Sanya Mehra** — tech founder turning 30. Five guests. A **real-time countdown**. At minute 10, the lights go out. At minute 11, the host is dead with a cake knife in her chest. **5 suspects. 2 interactive puzzles. Fast-paced.**
+>
+> 🎮 *New game mode: Real-time room navigation, blackout flashlight effect, phone unlock & torn paper puzzles*
+
+### Episode 4–10: 🔒 Coming Soon
 > New episodes added regularly. Each is a self-contained mystery you can play in any order.
 
 ---
@@ -63,15 +70,18 @@
 
 | Feature | Details |
 |---------|---------|
-| 🧩 **Deep Investigation** | 20 evidence items per episode, progressive unlocking, red herrings |
-| 👥 **Complex Suspects** | 6–7 suspects with detailed profiles, interviews, and hidden motives |
-| ⏱️ **Timeline Analysis** | Chronological events with timestamps, contradictions, and critical windows |
+| 🧩 **Deep Investigation** | 5–20 evidence items per episode, progressive unlocking, red herrings |
+| 👥 **Complex Suspects** | 5–7 suspects with detailed profiles, interviews, and hidden motives |
+| ⏱️ **Real-Time Mode** | Live countdown, room navigation, suspects move based on timeline (Ep3) |
+| 🌑 **Blackout Event** | Screen goes dark, flashlight follows cursor, cinematic audio cues (Ep3) |
+| 🧩 **Interactive Puzzles** | Phone unlock pattern & torn paper assembly mini-games (Ep3) |
+| ⏱️ **Timeline Analysis** | Chronological events with timestamps and contradictions (Ep1–2) |
 | 🔗 **Relationship Map** | Visual web of connections, tensions, and secrets between characters |
 | ⚖️ **Accusation System** | Select the killer — 3 attempts max, no brute force |
 | 💡 **Hint System** | Progressive hints + full solution reveal as last resort |
 | 📝 **Detective's Notebook** | Personal notes that save automatically |
 | 💾 **Auto-Save** | Progress saved per episode to localStorage |
-| 📊 **Scoring** | Time, hints, and attempts tracked for each case |
+| 🔐 **Anti-Cheat** | Answers encrypted in bundle — no plain-text spoilers in source code |
 
 ---
 
@@ -81,37 +91,37 @@
 src/
 ├── 📁 episodes/              # Episode data (scalable to 10+)
 │   ├── index.js              # Episode registry + loader
-│   ├── episode1/
+│   ├── episode1/             # Classic investigation mode
 │   │   ├── data/             # suspects, evidence, timeline, relationships
-│   │   └── logic/            # puzzleLogic (10 logic points, hints, reveal)
-│   └── episode2/
-│       ├── data/
-│       └── logic/
+│   │   └── logic/            # puzzleLogic (encrypted, hints, reveal)
+│   ├── episode2/             # Classic investigation mode
+│   │   ├── data/
+│   │   └── logic/
+│   └── episode3/             # ⚡ Real-time mode (new!)
+│       ├── data/             # + rooms.js for navigable locations
+│       ├── logic/
+│       └── components/       # RealTimeSection, BlackoutOverlay, Puzzles
 │
 ├── 📁 pages/                 # Top-level pages
 │   └── HomePage.jsx          # Hero, episode grid, features
 │
-├── 📁 sections/              # Game screens
+├── 📁 sections/              # Game screens (classic mode)
 │   ├── IntroSection.jsx      # Cinematic typewriter intro
-│   ├── BriefingSection.jsx   # 3-page case briefing
+│   ├── BriefingSection.jsx   # Case briefing pages
 │   └── InvestigationSection.jsx  # Main workspace (6 tabs)
 │
-├── 📁 components/            # 11 reusable UI components
+├── 📁 components/            # Reusable UI components
 │   ├── AccusationPanel.jsx   # Suspect selection + reveal
-│   ├── EvidenceViewer.jsx    # Evidence detail modal
 │   ├── HintSystem.jsx        # Hints + solution reveal
-│   ├── SuspectProfile.jsx    # Profile + interview Q&A
-│   ├── TimelineBoard.jsx     # Event timeline
-│   ├── RelationshipMap.jsx   # Connection web
-│   └── ...                   # Modal, Notepad, Cards, etc.
+│   └── ...                   # Evidence, Suspects, Timeline, etc.
+│
+├── 📁 utils/                 # Crypto utilities (answer encryption)
+│   └── crypto.js
 │
 ├── 📁 store/                 # Zustand state (episode-aware)
 │   └── gameStore.js          # Per-episode save, dynamic data
 │
-├── 📁 animations/            # Framer Motion presets
-│   └── variants.js
-│
-└── App.jsx                   # Router: Home ↔ Episode gameplay
+└── App.jsx                   # Router: classic vs real-time mode
 ```
 
 > **Key design:** All components read data from the store's `episodeData` — no hardcoded imports. Adding a new episode requires only creating data files and registering in `episodes/index.js`.
@@ -152,8 +162,8 @@ npm run build    # → dist/ folder
 
 | Phase | Status | Details |
 |-------|--------|---------|
-| Episodes 1–2 | ✅ Done | The Last Candle + The Silent Poison |
-| Episodes 3–10 | 🔄 In Progress | New episode added daily |
+| Episodes 1–3 | ✅ Done | The Last Candle + The Silent Poison + The Blackout Birthday |
+| Episodes 4–10 | 🔄 In Progress | New episode added regularly |
 | Scalability | 📋 Planned | Lazy loading after 10 episodes |
 | User Accounts | 📋 Planned | Login, save progress to cloud |
 | Payments | 📋 Planned | Premium episodes, subscriptions |
