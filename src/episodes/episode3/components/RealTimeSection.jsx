@@ -188,19 +188,19 @@ export default function RealTimeSection() {
                 <div className="sticky top-0 z-10 bg-noir-950/95 backdrop-blur-sm border-b border-red-900/30 px-4 py-3">
                     <div className="max-w-4xl mx-auto flex items-center justify-between">
                         <div>
-                            <h2 className="text-sm font-serif font-bold text-red-400">🔍 Crime Scene Investigation</h2>
-                            <p className="text-[10px] text-noir-500">Sanya Mehra found dead. Examine evidence. Find the killer.</p>
+                            <h2 className="text-base font-serif font-bold text-red-400">🔍 Crime Scene Investigation</h2>
+                            <p className="text-xs text-noir-400">Sanya Mehra found dead. Examine evidence. Find the killer.</p>
                         </div>
                         <div className="flex items-center gap-2">
                             <HintSystem />
                             <button
                                 onClick={() => setShowAccusation(true)}
-                                className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-900/30 text-red-400 border border-red-800/30
+                                className="px-4 py-2 rounded-lg text-sm font-semibold bg-red-900/30 text-red-400 border border-red-800/30
                                            hover:bg-red-900/50 transition-colors"
                             >
                                 ⚖️ Accuse
                             </button>
-                            <button onClick={goHome} className="text-xs text-noir-600 hover:text-noir-400 transition-colors">
+                            <button onClick={goHome} className="text-sm text-noir-500 hover:text-noir-300 transition-colors">
                                 ✕
                             </button>
                         </div>
@@ -229,15 +229,15 @@ export default function RealTimeSection() {
                                     <div className="flex items-start gap-3">
                                         <span className="text-2xl">{item.icon}</span>
                                         <div className="flex-1 min-w-0">
-                                            <h3 className="text-sm font-semibold text-noir-200 truncate">{item.title}</h3>
-                                            <p className="text-[11px] text-noir-500 mt-1 line-clamp-2">{item.summary}</p>
+                                            <h3 className="text-base font-semibold text-noir-200 truncate">{item.title}</h3>
+                                            <p className="text-sm text-noir-400 mt-1 line-clamp-2">{item.summary}</p>
                                             {isPuzzle && !puzzleSolved && discovered && (
-                                                <span className="inline-block mt-2 text-[10px] text-evidence bg-evidence/10 px-2 py-0.5 rounded-full">
+                                                <span className="inline-block mt-2 text-xs text-evidence bg-evidence/10 px-2 py-0.5 rounded-full">
                                                     🧩 Interactive Puzzle
                                                 </span>
                                             )}
                                             {isPuzzle && puzzleSolved && (
-                                                <span className="inline-block mt-2 text-[10px] text-green-400 bg-green-900/20 px-2 py-0.5 rounded-full">
+                                                <span className="inline-block mt-2 text-xs text-green-400 bg-green-900/20 px-2 py-0.5 rounded-full">
                                                     ✓ Solved
                                                 </span>
                                             )}
@@ -250,21 +250,21 @@ export default function RealTimeSection() {
 
                     {/* Suspect Quick Interviews */}
                     <div className="mt-8">
-                        <h3 className="text-sm font-semibold text-noir-300 mb-3">👥 Quick Interviews</h3>
+                        <h3 className="text-base font-semibold text-noir-200 mb-3">👥 Quick Interviews</h3>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             {suspects.map(s => (
                                 <details key={s.id} className="bg-noir-900/60 border border-noir-700/30 rounded-xl overflow-hidden group">
                                     <summary className="p-3 cursor-pointer flex items-center gap-3 hover:bg-noir-800/30 transition-colors">
                                         <span className="text-xl">{s.portrait}</span>
                                         <div>
-                                            <p className="text-xs font-semibold text-noir-200">{s.name}</p>
-                                            <p className="text-[10px] text-noir-500">{s.role}</p>
+                                            <p className="text-sm font-semibold text-noir-200">{s.name}</p>
+                                            <p className="text-xs text-noir-400">{s.role}</p>
                                         </div>
                                     </summary>
                                     <div className="p-3 pt-0 space-y-2">
                                         {s.interview.map((qa, i) => (
-                                            <div key={i} className="text-[11px]">
-                                                <p className="text-evidence/70 font-medium">Q: {qa.q}</p>
+                                            <div key={i} className="text-sm">
+                                                <p className="text-evidence/80 font-medium">Q: {qa.q}</p>
                                                 <p className="text-noir-400 mt-0.5">"{qa.a}"</p>
                                             </div>
                                         ))}
@@ -284,7 +284,7 @@ export default function RealTimeSection() {
                                     <span className="text-3xl">{activeEvidence.icon}</span>
                                     <h3 className="text-base font-serif font-bold text-noir-100">{activeEvidence.title}</h3>
                                 </div>
-                                <div className="text-xs text-noir-300 whitespace-pre-line leading-relaxed">
+                                <div className="text-sm text-noir-300 whitespace-pre-line leading-relaxed">
                                     {activeEvidence.fullText}
                                 </div>
                             </div>
@@ -325,11 +325,11 @@ export default function RealTimeSection() {
             <div className="sticky top-0 z-10 bg-noir-950/95 backdrop-blur-sm border-b border-noir-800/50 px-4 py-2">
                 <div className="max-w-4xl mx-auto flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <button onClick={goHome} className="text-xs text-noir-600 hover:text-noir-400 transition-colors">
+                        <button onClick={goHome} className="text-sm text-noir-500 hover:text-noir-300 transition-colors">
                             ← Home
                         </button>
                         <span className="text-noir-700">|</span>
-                        <span className="text-xs text-noir-400">{currentRoomData?.icon} {currentRoomData?.name}</span>
+                        <span className="text-sm font-medium text-noir-300">{currentRoomData?.icon} {currentRoomData?.name}</span>
                     </div>
 
                     {/* Timer */}
@@ -342,13 +342,13 @@ export default function RealTimeSection() {
                         >
                             {String(gameMinute).padStart(2, '0')}:{String(Math.floor(gameSeconds)).padStart(2, '0')}
                         </motion.div>
-                        <span className="text-[10px] text-noir-600">/ {TOTAL_GAME_MINUTES}:00</span>
+                        <span className="text-xs text-noir-500">/ {TOTAL_GAME_MINUTES}:00</span>
                     </div>
                 </div>
 
                 {/* Timer progress bar */}
                 <div className="max-w-4xl mx-auto mt-1">
-                    <div className="h-0.5 bg-noir-800 rounded-full overflow-hidden">
+                    <div className="h-1 bg-noir-800 rounded-full overflow-hidden">
                         <motion.div
                             className={`h-full rounded-full ${gameMinute >= 8 ? 'bg-red-500' : 'bg-evidence'}`}
                             style={{ width: `${((gameMinute * 60 + gameSeconds) / (TOTAL_GAME_MINUTES * 60)) * 100}%` }}

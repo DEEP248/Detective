@@ -25,6 +25,9 @@
     overflow-x: hidden;
     background-color: #1a1510;
     min-height: 100vh;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
@@ -57,7 +60,7 @@
     @apply bg-noir-900/40 backdrop-blur-md border border-noir-700/30 rounded-xl;
   }
   .text-label {
-    @apply text-xs font-semibold uppercase tracking-[0.15em] text-noir-400;
+    @apply text-sm font-semibold uppercase tracking-[0.12em] text-noir-400;
   }
   .divider {
     @apply w-full h-px bg-gradient-to-r from-transparent via-noir-600 to-transparent;
